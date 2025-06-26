@@ -7,12 +7,23 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: skibidi
+      POSTGRES_DB: WeatherStation
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - 5432:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 54321:54321
+
+volumes:
+  db_data:
